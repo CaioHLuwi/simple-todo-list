@@ -1,36 +1,31 @@
-const inputAdicionar = document.querySelector('#adicionaItem');
-const inputRemover = document.querySelector('#apagarItem');
+const botao = document.querySelector('#botao');
+const botaoPost = document.querySelector('#botaoPost');
 
-function adicionaItem(e){
-    let valorInputAdicionar = inputAdicionar.value;
-    const liElement = document.createElement('li');
-    const ulLista = document.querySelector('#lista');
-
-    if(e.key === 'Enter'){
-        liElement.innerText = valorInputAdicionar;
-        liElement.classList.add('item_lista');
-        ulLista.append(liElement);
-
-        inputAdicionar.value = '';
-    }
+async function getRequest(){
+    let response = await fetch('https://jsonplaceholder.typicode.com/posts');
+    let json = await response.json();
+    alert(`O conteúdo do request é ${json[1].title}`);
+    alert('Clicou')
 }
 
-function apagaItem(e){
-    const itensLista = document.querySelectorAll('.item_lista');
-    let valorInputRemover = inputRemover.value;
-
-    if(e.key === 'Enter'){
-        for(i = 0; i < itensLista.length; i++){
-            if(valorInputRemover === itensLista[i].innerHTML){
-                itensLista[i].remove();
-
-            }
+async function postRequest(){
+    let response = await fetch('https://jsonplaceholder.typicode.com/posts',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({
+                title: 'Título do post',
+                body: 'Aqui tem informações do novo post',
+                userId: 5
+            })
         }
+    );
+    let json = await response.json();
 
-        inputRemover.value = '';
-    }
+    console.log(json);
 }
 
-inputAdicionar.addEventListener('keyup', adicionaItem);
-
-inputRemover.addEventListener('keyup', apagaItem);
+botao.addEventListener('click', getRequest);
+botaoPost.addEventListener('click', postRequest);
